@@ -31,7 +31,7 @@ RUN \
         lua5.1=5.1.5-r13 \
         gettext=0.22.3-r0 \
         luarocks=3.9.2-r1 \
-        lua-cjson=	2.1.0-r11 \
+        lua-cjson=2.1.0-r11 \
         certbot=2.7.4-r0 \
         libcap=2.69-r1 \
         logrotate=3.21.0-r1 \
