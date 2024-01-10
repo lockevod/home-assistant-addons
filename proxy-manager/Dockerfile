@@ -28,16 +28,16 @@ RUN \
     \
     && apk add --no-cache \
         apache2-utils=2.4.58-r1 \
-        lua5.1 \
-        gettext \
-        luarocks \
-        lua-cjson \
+        lua5.1=5.1.5-r13 \
+        gettext=0.22.3-r0 \
+        luarocks=3.9.2-r1 \
+        lua-cjson=	2.1.0-r11 \
         certbot=2.7.4-r0 \
         libcap=2.69-r1 \
         logrotate=3.21.0-r1 \
         nginx-mod-stream=1.24.0-r14 \
         nginx=1.24.0-r14 \
-        nginx-mod-http-lua \
+        nginx-mod-http-lua=1.24.0-r14 \
         openssl=3.1.4-r3 \
         nodejs=20.10.0-r1 \
         py3-pip=23.3.1-r0 \
