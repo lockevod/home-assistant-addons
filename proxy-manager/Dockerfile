@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base-nodejs:0.1.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:15.0.4
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
@@ -13,6 +13,7 @@ COPY requirements.txt /tmp/
 
 # Setup base
 ARG NGINX_PROXY_MANAGER_VERSION="v2.10.4"
+ARG CROWDSEC_NPM_BOUNCER="v1.0.5"
 # hadolint ignore=DL3003,DL3042
 RUN \
     apk add --no-cache --virtual .build-dependencies \
@@ -22,15 +23,23 @@ RUN \
         openssl-dev=3.1.4-r3 \
         patch=2.7.6-r10 \
         python3-dev=3.11.6-r1 \
+        npm=10.2.5-r0 \
+        yarn=1.22.19-r0 \
     \
     && apk add --no-cache \
         apache2-utils=2.4.58-r1 \
+        lua5.1 \
+        gettext \
+        luarocks \
+        lua-cjson \
         certbot=2.7.4-r0 \
         libcap=2.69-r1 \
         logrotate=3.21.0-r1 \
         nginx-mod-stream=1.24.0-r14 \
         nginx=1.24.0-r14 \
+        nginx-mod-http-lua \
         openssl=3.1.4-r3 \
+        nodejs=20.10.0-r1 \
         py3-pip=23.3.1-r0 \
         python3=3.11.6-r1 \
     \
@@ -102,9 +111,12 @@ RUN \
     && yarn global remove modclean \
     && yarn cache clean \
     \
-    && apk del --purge .build-dependencies \
-    \
-    && rm -f -r \
+    && apk del --purge .build-dependencies 
+
+# Bouncer installation 
+COPY install_bouncer /tmp/
+RUN chmod +x /tmp/install_bouncer \
+&& rm -f -r \
         /app \
         /etc/init.d/nginx \
         /etc/logrotate.d/nginx \
@@ -119,7 +131,6 @@ RUN \
         /var/log/nginx \
         /var/tmp/nginx \
         /var/www
-
 # Copy root filesystem
 COPY rootfs /
 

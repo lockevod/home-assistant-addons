@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RED='\E[1;31m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Installing Crowdsec NPM Bouncer ${YELLOW}${CROWDSEC_NPM_BOUNCER:-}...${RESET}"
+
+if [ "${CROWDSEC_NPM_BOUNCER:-}" = "" ]; then
+	echo -e "${RED}❯ ERROR: CROWDSEC_NPM_BOUNCER environment variable is not set!${RESET}"
+	exit 1
+fi
+
+cd /tmp
+wget "https://github.com/crowdsecurity/cs-nginx-bouncer/releases/download/${CROWDSEC_NPM_BOUNCER}/crowdsec-nginx-bouncer.tgz" -O crowdsec-nginx-bouncer.tgz
+mkdir -p /tmp/crowdsec
+tar xzf crowdsec-nginx-bouncer.tgz --strip 1 -C /tmp/crowdsec
+rm -rf /tmp/crowdsec-nginx-bouncer.tgz
+cd /tmp/crowdsec
+
+bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --docker
+sed -i 's|ENABLED=.*|ENABLED=false|' /defaults/crowdsec/crowdsec-nginx-bouncer.conf.conf
+rm -rf /tmp/crowdsec
+
+echo -e "${BLUE}❯ ${GREEN}Nginx plugins install completed${RESET}"
