@@ -1,25 +1,23 @@
 ---
-name: Nginx Proxy Manager
-version: dev
+name: Nginx Proxy Manager CrowdSec Moded
+version: 0.1Alpha
 slug: nginxproxymanager
-description: Manage Nginx proxy hosts with a simple, powerful interface
+description: Manage Nginx proxy hosts with a simple, powerful interface mo
 url: https://github.com/hassio-addons/addon-nginx-proxy-manager
 codenotary: codenotary@frenck.dev
-webui: http://[HOST]:[PORT:81]
+webui: http://[HOST]:[PORT:8181]
 init: false
 arch:
   - aarch64
-  - amd64
-  - armv7
 hassio_api: true
 ports:
-  80/tcp: 80
-  81/tcp: 81
-  443/tcp: 443
+  8080/tcp: 80
+  8181/tcp: 81
+  4443/tcp: 443
 ports_description:
-  80/tcp: HTTP Entrance port
-  81/tcp: Proxy management web interface
-  443/tcp: HTTPS/SSL Entrance port
+  8080/tcp: HTTP Entrance port
+  8181/tcp: Proxy management web interface
+  4443/tcp: HTTPS/SSL Entrance port
 map:
   - addon_config:rw
 backup_exclude:

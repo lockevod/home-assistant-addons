@@ -13,6 +13,7 @@ COPY requirements.txt /tmp/
 
 # Setup base
 ARG NGINX_PROXY_MANAGER_VERSION="v2.10.4"
+ARG BOUNCER_VERSION="v1.0.5"
 # hadolint ignore=DL3003,DL3042
 RUN \
     apk add --no-cache --virtual .build-dependencies \
@@ -102,10 +103,21 @@ RUN \
     && yarn global remove modclean \
     && yarn cache clean \
     \
-    && apk del --purge .build-dependencies \
-    \
+    && apk del --purge .build-dependencies 
+    
+    # Bouncer installation 
+  
+RUN curl -J -L -o /tmp/bouncer.tgz \
+        "https://github.com/crowdsecurity/cs-nginx-bouncer/releases/download/${BOUNCER_VERSION}/crowdsec-nginx-bouncer.tgz" \
+    && mkdir /bouncer \
+    && tar zxvf \
+        /tmp/bouncer.tgz \
+        --strip 1 -C /bouncer \
+    && chmod +x /bouncer/install.sh \
+    && /bouncer/install.sh \
     && rm -f -r \
         /app \
+        /bouncer \
         /etc/init.d/nginx \
         /etc/logrotate.d/nginx \
         /opt/nginx-proxy-manager/node_modules/bcrypt/build \
